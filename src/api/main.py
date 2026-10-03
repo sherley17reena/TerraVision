@@ -2,6 +2,14 @@ from pathlib import Path
 import shutil
 import tempfile
 
+import base64
+import io
+
+from src.analysis.visualization import (
+    colorize_segmentation_mask,
+    create_change_map,
+)
+
 from fastapi import (
     FastAPI,
     File,
@@ -99,8 +107,51 @@ async def analyze(
             device=device,
         )
 
-        # Return only JSON-friendly statistics.
-        # Masks will later be returned as images.
+        segmentation_t1 = colorize_segmentation_mask(
+            results["mask_t1"]
+        )
+
+        segmentation_t2 = colorize_segmentation_mask(
+            results["mask_t2"]
+        )
+
+        change_map = create_change_map(
+            results["change_mask"]
+        )
+
+
+        def image_to_base64(image):
+            buffer = io.BytesIO()
+
+            image.save(
+                buffer,
+                format="PNG",
+            )
+
+            encoded = base64.b64encode(
+                buffer.getvalue()
+            ).decode("utf-8")
+
+            return (
+                "data:image/png;base64,"
+                + encoded
+            )
+
+
+        segmentation_t1_base64 = image_to_base64(
+            segmentation_t1
+        )
+
+        segmentation_t2_base64 = image_to_base64(
+            segmentation_t2
+        )
+
+        change_map_base64 = image_to_base64(
+            change_map
+        )
+
+        # Return only JSON-friendly statistics and
+        # Base64-encoded visualization images.
         return {
             "status": "success",
             "change_percentage": (
@@ -118,6 +169,12 @@ async def analyze(
             "land_cover": (
                 results["land_cover"]
             ),
+
+            "visualizations": {
+                "segmentation_t1": segmentation_t1_base64,
+                "segmentation_t2": segmentation_t2_base64,
+                "change_map": change_map_base64,
+            },
         }
 
     except Exception as error:
