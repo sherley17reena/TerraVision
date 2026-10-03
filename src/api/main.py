@@ -1,14 +1,8 @@
 from pathlib import Path
-import shutil
-import tempfile
-
 import base64
 import io
-
-from src.analysis.visualization import (
-    colorize_segmentation_mask,
-    create_change_map,
-)
+import shutil
+import tempfile
 
 from fastapi import (
     FastAPI,
@@ -18,8 +12,16 @@ from fastapi import (
 )
 
 from src.analysis.pipeline import analyze_land_change
+from src.analysis.visualization import (
+    colorize_segmentation_mask,
+    create_change_map,
+)
 from src.models.inference import load_unet_model
 
+
+# ---------------------------------------------------------
+# FASTAPI APPLICATION
+# ---------------------------------------------------------
 
 app = FastAPI(
     title="TerraVision API",
@@ -31,9 +33,43 @@ app = FastAPI(
 )
 
 
-# Load the trained model once when the API starts.
+# ---------------------------------------------------------
+# LOAD MODEL
+# ---------------------------------------------------------
+
+# Load the trained U-Net once when the API starts.
 model, device = load_unet_model()
 
+
+# ---------------------------------------------------------
+# HELPER FUNCTIONS
+# ---------------------------------------------------------
+
+def image_to_base64(image):
+    """
+    Convert a PIL image into a Base64 PNG data URL.
+    """
+
+    buffer = io.BytesIO()
+
+    image.save(
+        buffer,
+        format="PNG",
+    )
+
+    encoded = base64.b64encode(
+        buffer.getvalue()
+    ).decode("utf-8")
+
+    return (
+        "data:image/png;base64,"
+        + encoded
+    )
+
+
+# ---------------------------------------------------------
+# ROOT
+# ---------------------------------------------------------
 
 @app.get("/")
 def root():
@@ -46,6 +82,10 @@ def root():
     }
 
 
+# ---------------------------------------------------------
+# HEALTH CHECK
+# ---------------------------------------------------------
+
 @app.get("/health")
 def health():
     return {
@@ -54,13 +94,17 @@ def health():
     }
 
 
+# ---------------------------------------------------------
+# LAND-CHANGE ANALYSIS
+# ---------------------------------------------------------
+
 @app.post("/analyze")
 async def analyze(
     image_t1: UploadFile = File(...),
     image_t2: UploadFile = File(...),
 ):
     """
-    Analyze land-cover change between two images.
+    Analyze land-cover change between two satellite images.
     """
 
     allowed_types = {
@@ -68,37 +112,52 @@ async def analyze(
         "image/jpeg",
     }
 
+    # Validate T1 image.
     if image_t1.content_type not in allowed_types:
         raise HTTPException(
             status_code=400,
             detail="T1 must be a PNG or JPEG image.",
         )
 
+    # Validate T2 image.
     if image_t2.content_type not in allowed_types:
         raise HTTPException(
             status_code=400,
             detail="T2 must be a PNG or JPEG image.",
         )
 
+    # Create temporary storage for uploaded images.
     temp_dir = Path(
         tempfile.mkdtemp()
     )
 
     try:
-        t1_path = temp_dir / "image_t1.png"
-        t2_path = temp_dir / "image_t2.png"
 
+        t1_path = (
+            temp_dir / "image_t1.png"
+        )
+
+        t2_path = (
+            temp_dir / "image_t2.png"
+        )
+
+        # Save T1.
         with t1_path.open("wb") as buffer:
             shutil.copyfileobj(
                 image_t1.file,
                 buffer,
             )
 
+        # Save T2.
         with t2_path.open("wb") as buffer:
             shutil.copyfileobj(
                 image_t2.file,
                 buffer,
             )
+
+        # -------------------------------------------------
+        # RUN TERRAVISION PIPELINE
+        # -------------------------------------------------
 
         results = analyze_land_change(
             t1_path,
@@ -107,75 +166,87 @@ async def analyze(
             device=device,
         )
 
-        segmentation_t1 = colorize_segmentation_mask(
-            results["mask_t1"]
+        # -------------------------------------------------
+        # CREATE VISUALIZATIONS
+        # -------------------------------------------------
+
+        segmentation_t1 = (
+            colorize_segmentation_mask(
+                results["mask_t1"]
+            )
         )
 
-        segmentation_t2 = colorize_segmentation_mask(
-            results["mask_t2"]
+        segmentation_t2 = (
+            colorize_segmentation_mask(
+                results["mask_t2"]
+            )
         )
 
         change_map = create_change_map(
             results["change_mask"]
         )
 
-
-        def image_to_base64(image):
-            buffer = io.BytesIO()
-
-            image.save(
-                buffer,
-                format="PNG",
+        # Convert visualization images to Base64.
+        segmentation_t1_base64 = (
+            image_to_base64(
+                segmentation_t1
             )
+        )
 
-            encoded = base64.b64encode(
-                buffer.getvalue()
-            ).decode("utf-8")
-
-            return (
-                "data:image/png;base64,"
-                + encoded
+        segmentation_t2_base64 = (
+            image_to_base64(
+                segmentation_t2
             )
-
-
-        segmentation_t1_base64 = image_to_base64(
-            segmentation_t1
         )
 
-        segmentation_t2_base64 = image_to_base64(
-            segmentation_t2
+        change_map_base64 = (
+            image_to_base64(
+                change_map
+            )
         )
 
-        change_map_base64 = image_to_base64(
-            change_map
-        )
+        # -------------------------------------------------
+        # API RESPONSE
+        # -------------------------------------------------
 
-        # Return only JSON-friendly statistics and
-        # Base64-encoded visualization images.
         return {
             "status": "success",
+
             "change_percentage": (
                 results["change_percentage"]
             ),
+
             "changed_pixels": (
                 results["changed_pixels"]
             ),
+
             "total_pixels": (
                 results["total_pixels"]
             ),
+
             "transitions": (
                 results["transitions"]
             ),
+
             "land_cover": (
                 results["land_cover"]
             ),
 
             "visualizations": {
-                "segmentation_t1": segmentation_t1_base64,
-                "segmentation_t2": segmentation_t2_base64,
-                "change_map": change_map_base64,
+                "segmentation_t1": (
+                    segmentation_t1_base64
+                ),
+                "segmentation_t2": (
+                    segmentation_t2_base64
+                ),
+                "change_map": (
+                    change_map_base64
+                ),
             },
         }
+
+    except HTTPException:
+        raise
 
     except Exception as error:
         raise HTTPException(
@@ -184,6 +255,8 @@ async def analyze(
         )
 
     finally:
+
+        # Always delete temporary uploaded files.
         shutil.rmtree(
             temp_dir,
             ignore_errors=True,
