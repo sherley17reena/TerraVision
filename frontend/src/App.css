@@ -239,3 +239,153 @@ body {
   color: #176345;
   white-space: nowrap;
 }
+
+.analysis-mode-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 14px;
+}
+
+.mode-button {
+  padding: 12px 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-button:hover:not(:disabled) {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.mode-button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.mode-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mode-description {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.summary-card span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.summary-card strong {
+  color: #0f172a;
+  font-size: 26px;
+}
+
+.change-mask-image {
+  image-rendering: auto;
+}
+
+.result-explanation {
+  color: #475569;
+  margin-top: 16px;
+  line-height: 1.6;
+}
+
+.analysis-error {
+  color: #dc2626;
+  margin-top: 14px;
+}
+
+@media (max-width: 640px) {
+  .analysis-mode-selector {
+    flex-direction: column;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.overlay-container {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  margin: 24px auto;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0f172a;
+}
+
+.overlay-base {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.overlay-mask {
+  display: none;
+}
+
+.overlay-container:has(.overlay-mask)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 0, 0, 0.65);
+  -webkit-mask-image: var(--change-mask);
+  mask-image: var(--change-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.download-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0 28px;
+}
+
+.download-button {
+  padding: 11px 18px;
+  border: 1px solid #15803d;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #166534;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.download-button:hover {
+  background: #f0fdf4;
+}

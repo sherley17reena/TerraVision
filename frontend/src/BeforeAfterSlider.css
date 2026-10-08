@@ -1,0 +1,96 @@
+
+.comparison-section {
+  margin: 32px 0;
+  text-align: center;
+}
+
+.comparison-description {
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.comparison-container {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0f172a;
+  user-select: none;
+}
+
+.comparison-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.comparison-before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.comparison-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: white;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.comparison-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: white;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.comparison-label {
+  position: absolute;
+  top: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.75);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.comparison-label-before {
+  left: 14px;
+}
+
+.comparison-label-after {
+  right: 14px;
+}
+
+.comparison-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  z-index: 4;
+}

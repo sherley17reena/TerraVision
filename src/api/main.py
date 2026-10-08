@@ -3,6 +3,10 @@ import base64
 import io
 import shutil
 import tempfile
+
+import numpy as np
+from PIL import Image
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import (
     FastAPI,
@@ -17,6 +21,9 @@ from src.analysis.visualization import (
     create_change_map,
 )
 from src.models.inference import load_unet_model
+
+
+from src.models.temporal_inference import TemporalChangeDetector
 
 
 # ---------------------------------------------------------
@@ -271,3 +278,65 @@ async def analyze(
             temp_dir,
             ignore_errors=True,
         )
+
+    
+from functools import lru_cache
+
+
+@lru_cache(maxsize=1)
+def get_temporal_detector():
+    return TemporalChangeDetector()
+
+
+def encode_change_mask(mask):
+    mask_image = Image.fromarray(
+        (mask * 255).astype(np.uint8),
+        mode="L",
+    )
+
+    buffer = io.BytesIO()
+    mask_image.save(buffer, format="PNG")
+
+    return base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+
+@app.post("/analyze/buildings")
+async def analyze_buildings(
+    image_t1: UploadFile = File(...),
+    image_t2: UploadFile = File(...),
+):
+    try:
+        before = Image.open(
+            io.BytesIO(await image_t1.read())
+        ).convert("RGB")
+
+        after = Image.open(
+            io.BytesIO(await image_t2.read())
+        ).convert("RGB")
+
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload two valid satellite images.",
+        )
+
+    if before.size != after.size:
+        raise HTTPException(
+            status_code=400,
+            detail="Before and after images must have matching dimensions.",
+        )
+
+    detector = get_temporal_detector()
+    result = detector.predict(before, after)
+
+    return {
+        "analysis_type": "building_change_detection",
+        "model": "Temporal U-Net",
+        "image_size": [256, 256],
+        "changed_pixels": result["changed_pixels"],
+        "total_pixels": result["total_pixels"],
+        "change_percentage": result["change_percentage"],
+        "change_mask": encode_change_mask(
+            result["change_mask"]
+        ),
+    }
