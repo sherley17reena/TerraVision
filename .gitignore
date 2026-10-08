@@ -2,11 +2,24 @@
 __pycache__/
 *.pyc
 .DS_Store
+.ipynb_checkpoints/
 
 data/raw/
 data/processed/
-outputs/
+data/sample_pairs/
 
+# Trained models and generated outputs
+outputs/
+*.pth
+*.pt
+*.joblib
 outputs/models/
 
-.ipynb_checkpoints/
+node_modules/
+frontend/dist/
+
+# Local environment variables
+.env
+.env.*
+!.env.example
+
