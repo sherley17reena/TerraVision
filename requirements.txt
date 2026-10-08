@@ -1,6 +1,15 @@
+
 numpy
 pandas
 matplotlib
 scikit-learn
 opencv-python
+Pillow
+torch
+torchvision
+fastapi
+uvicorn
+python-multipart
+httpx
+pytest
 jupyter
