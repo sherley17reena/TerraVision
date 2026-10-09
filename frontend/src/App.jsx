@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 import BeforeAfterSlider from "./BeforeAfterSlider";
+import BuildingChangeOverlay from "./BuildingChangeOverlay";
 
 import {
   downloadReport,
@@ -28,6 +29,7 @@ function App() {
   const [results, setResults] = useState(null);
   const [error, setError] = useState("");
 
+  // Generate image previews and release object URLs.
   useEffect(() => {
     if (!imageT1) {
       setPreviewT1(null);
@@ -80,6 +82,7 @@ function App() {
     }
   };
 
+  // Send images to the selected FastAPI endpoint.
   const handleAnalyze = async () => {
     if (!imageT1 || !imageT2 || loading) return;
 
@@ -87,8 +90,10 @@ function App() {
     setError("");
     setResults(null);
 
+    const selectedMode = analysisMode;
+
     const endpoint =
-      analysisMode === "buildings"
+      selectedMode === "buildings"
         ? "/analyze/buildings"
         : "/analyze";
 
@@ -113,7 +118,7 @@ function App() {
             message = errorData.detail;
           }
         } catch {
-          // Use the default error message.
+          // Keep the default error message.
         }
 
         throw new Error(message);
@@ -122,7 +127,7 @@ function App() {
       const data = await response.json();
 
       setResults({
-        mode: analysisMode,
+        mode: selectedMode,
         data,
       });
     } catch (err) {
@@ -151,13 +156,14 @@ function App() {
 
   const resultData = results?.data;
   const resultMode = results?.mode;
-
   const isBuildingMode = analysisMode === "buildings";
 
   return (
     <div className="app">
+      {/* HEADER */}
       <header className="header">
         <h1>TerraVision</h1>
+
         <p>
           AI-Powered Land Change Detection & Environmental Intelligence
         </p>
@@ -209,6 +215,7 @@ function App() {
 
           {/* IMAGE UPLOADS */}
           <div className="upload-grid">
+            {/* EARLIER IMAGE */}
             <div className="upload-card">
               <h3>Earlier Image (T1)</h3>
 
@@ -241,6 +248,7 @@ function App() {
               )}
             </div>
 
+            {/* LATER IMAGE */}
             <div className="upload-card">
               <h3>Later Image (T2)</h3>
 
@@ -288,6 +296,7 @@ function App() {
                 : "Analyze Land-Cover Changes"}
           </button>
 
+          {/* ERROR MESSAGE */}
           {error && (
             <p className="analysis-error" role="alert">
               {error}
@@ -342,15 +351,18 @@ function App() {
               <div className="summary-grid">
                 <div className="summary-card">
                   <span>Predicted Change</span>
+
                   <strong>
                     {Number(
                       resultData.change_percentage
-                    ).toFixed(2)}%
+                    ).toFixed(2)}
+                    %
                   </strong>
                 </div>
 
                 <div className="summary-card">
                   <span>Changed Pixels</span>
+
                   <strong>
                     {resultData.changed_pixels.toLocaleString()}
                   </strong>
@@ -358,45 +370,34 @@ function App() {
 
                 <div className="summary-card">
                   <span>Total Pixels</span>
+
                   <strong>
                     {resultData.total_pixels.toLocaleString()}
                   </strong>
                 </div>
               </div>
 
+              {/* BUILDING CHANGE DETECTION */}
               {resultMode === "buildings" ? (
                 <>
-                  {/* BEFORE/AFTER COMPARISON */}
+                  {/* BEFORE/AFTER SLIDER */}
                   <BeforeAfterSlider
                     beforeImage={previewT1}
                     afterImage={previewT2}
                   />
 
-                  {/* RED CHANGE OVERLAY */}
+                  {/* CORRECTED RED CHANGE OVERLAY */}
                   <h3>Building Change Overlay</h3>
 
-                  <div
-                    className="overlay-container"
-                    style={{
-                      "--change-mask": `url("data:image/png;base64,${resultData.change_mask}")`,
-                    }}
-                  >
-                    <img
-                      src={previewT2}
-                      alt="Satellite image after changes"
-                      className="overlay-base"
-                    />
-
-                    <img
-                      src={`data:image/png;base64,${resultData.change_mask}`}
-                      alt="Building change mask"
-                      className="overlay-mask"
-                    />
-                  </div>
+                  <BuildingChangeOverlay
+                    afterImage={previewT2}
+                    base64Mask={resultData.change_mask}
+                  />
 
                   <p className="result-explanation">
-                    Red highlighted areas indicate predicted building
-                    changes between the two satellite images.
+                    Red highlighted areas indicate predicted
+                    building changes between the two satellite
+                    images.
                   </p>
 
                   {/* BUILDING CHANGE MAPS */}
@@ -433,16 +434,16 @@ function App() {
                   </div>
 
                   <p className="result-explanation">
-                    White pixels indicate predicted building changes.
-                    Black pixels indicate areas predicted to be
-                    unchanged.
+                    White pixels indicate predicted building
+                    changes. Black pixels indicate areas predicted
+                    to be unchanged.
                   </p>
 
                   <p className="upload-note">
-                    Model: Temporal U-Net | LEVIR-CD Test F1: 83.16% |
-                    Test IoU: 71.18%. These scores describe
-                    dataset-level evaluation performance, not
-                    confidence for this particular upload.
+                    Model: Temporal U-Net | LEVIR-CD Test F1:
+                    83.16% | Test IoU: 71.18%. These scores
+                    describe dataset-level evaluation performance,
+                    not confidence for this particular upload.
                   </p>
                 </>
               ) : (
@@ -477,7 +478,9 @@ function App() {
                       <h4>Detected Changes</h4>
 
                       <img
-                        src={resultData.visualizations.change_map}
+                        src={
+                          resultData.visualizations.change_map
+                        }
                         alt="Predicted land-cover changes"
                       />
                     </div>
@@ -534,7 +537,10 @@ function App() {
                           key={transition}
                         >
                           <span>
-                            {transition.replace(" -> ", " → ")}
+                            {transition.replace(
+                              " -> ",
+                              " → "
+                            )}
                           </span>
 
                           <strong>
@@ -550,10 +556,10 @@ function App() {
 
           {/* MODEL LIMITATIONS */}
           <p className="upload-note">
-            For meaningful results, both images must show the same
-            geographical area, be properly aligned, and have
-            comparable spatial resolution. Building-change detection
-            is trained specifically on LEVIR-CD imagery.
+            For meaningful results, both images must show the
+            same geographical area, be properly aligned, and
+            have comparable spatial resolution. Building-change
+            detection is trained specifically on LEVIR-CD imagery.
           </p>
         </section>
       </main>

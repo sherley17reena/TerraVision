@@ -1,3 +1,8 @@
+
+/* =========================================
+   TERRAVISION - GLOBAL STYLES
+========================================= */
+
 * {
   box-sizing: border-box;
 }
@@ -12,6 +17,10 @@ body {
 .app {
   min-height: 100vh;
 }
+
+/* =========================================
+   HEADER
+========================================= */
 
 .header {
   background: #163a2b;
@@ -29,6 +38,10 @@ body {
   margin: 8px 0 0;
   color: #cfe3d8;
 }
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
 
 .container {
   max-width: 1000px;
@@ -54,191 +67,9 @@ body {
   margin-bottom: 30px;
 }
 
-.upload-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 30px;
-}
-
-.upload-card {
-  border: 2px dashed #a7bdb1;
-  border-radius: 12px;
-  padding: 35px 20px;
-  background: #f8faf9;
-}
-
-.upload-card h3 {
-  margin-top: 0;
-}
-
-.upload-card input {
-  width: 100%;
-}
-
-.analyze-button {
-  border: none;
-  border-radius: 8px;
-  padding: 13px 28px;
-  background: #1f6b4f;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.analyze-button:hover {
-  background: #18563f;
-}
-
-@media (max-width: 700px) {
-  .upload-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .header h1 {
-    font-size: 34px;
-  }
-}
-.image-preview {
-  display: block;
-  width: 100%;
-  max-height: 260px;
-  object-fit: contain;
-  margin-top: 20px;
-  border-radius: 8px;
-  background: #e9efeb;
-}
-
-.analyze-button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-
-
-.preview-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.remove-button {
-  margin-top: 12px;
-  padding: 9px 16px;
-  border: 1px solid #dc2626;
-  border-radius: 7px;
-  background: white;
-  color: #dc2626;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.remove-button:hover {
-  background: #fef2f2;
-}
-
-.analyze-button:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-
-.upload-note {
-  margin-top: 20px;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.results-section {
-  margin-top: 36px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 20px;
-}
-
-.result-card {
-  padding: 16px;
-  border-radius: 12px;
-  background: #f8faf9;
-  border: 1px solid #e1e8e3;
-}
-
-.result-card h4 {
-  margin: 0 0 12px;
-  font-size: 15px;
-}
-
-.result-card img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-@media (max-width: 700px) {
-  .results-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.results-section h3 {
-  margin-top: 32px;
-  margin-bottom: 16px;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-}
-
-.stats-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
-}
-
-.stats-table th,
-.stats-table td {
-  padding: 13px 15px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.stats-table th {
-  background: #eaf2ed;
-  color: #173c2c;
-  font-weight: 700;
-}
-
-.stats-table tbody tr:hover {
-  background: #f8faf9;
-}
-
-.transitions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.transition-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 18px;
-  border-radius: 9px;
-  background: #f2f7f4;
-  text-align: left;
-}
-
-.transition-item strong {
-  color: #176345;
-  white-space: nowrap;
-}
+/* =========================================
+   ANALYSIS MODE SELECTOR
+========================================= */
 
 .analysis-mode-selector {
   display: flex;
@@ -262,13 +93,13 @@ body {
 }
 
 .mode-button:hover:not(:disabled) {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: #1f6b4f;
+  color: #1f6b4f;
 }
 
 .mode-button.active {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: #1f6b4f;
+  border-color: #1f6b4f;
   color: white;
 }
 
@@ -281,6 +112,115 @@ body {
   color: #64748b;
   margin-bottom: 24px;
 }
+
+/* =========================================
+   IMAGE UPLOAD SECTION
+========================================= */
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.upload-card {
+  border: 2px dashed #a7bdb1;
+  border-radius: 12px;
+  padding: 35px 20px;
+  background: #f8faf9;
+}
+
+.upload-card h3 {
+  margin-top: 0;
+}
+
+.upload-card input {
+  width: 100%;
+}
+
+.preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-preview {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  margin-top: 20px;
+  border-radius: 8px;
+  background: #e9efeb;
+}
+
+/* =========================================
+   REMOVE IMAGE BUTTON
+========================================= */
+
+.remove-button {
+  margin-top: 12px;
+  padding: 9px 16px;
+  border: 1px solid #dc2626;
+  border-radius: 7px;
+  background: white;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  background: #fef2f2;
+}
+
+/* =========================================
+   ANALYZE BUTTON
+========================================= */
+
+.analyze-button {
+  border: none;
+  border-radius: 8px;
+  padding: 13px 28px;
+  background: #1f6b4f;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.analyze-button:hover:not(:disabled) {
+  background: #18563f;
+}
+
+.analyze-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.analysis-error {
+  color: #dc2626;
+  margin-top: 14px;
+}
+
+/* =========================================
+   RESULTS SECTION
+========================================= */
+
+.results-section {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.results-section h3 {
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+/* =========================================
+   SUMMARY STATISTICS
+========================================= */
 
 .summary-grid {
   display: grid;
@@ -309,6 +249,37 @@ body {
   font-size: 26px;
 }
 
+/* =========================================
+   RESULTS GRID
+========================================= */
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.result-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: #f8faf9;
+  border: 1px solid #e1e8e3;
+}
+
+.result-card h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.result-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 .change-mask-image {
   image-rendering: auto;
 }
@@ -319,20 +290,10 @@ body {
   line-height: 1.6;
 }
 
-.analysis-error {
-  color: #dc2626;
-  margin-top: 14px;
-}
+/* =========================================
+   BUILDING CHANGE OVERLAY - FIXED
+========================================= */
 
-@media (max-width: 640px) {
-  .analysis-mode-selector {
-    flex-direction: column;
-  }
-
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-}
 .overlay-container {
   position: relative;
   width: 100%;
@@ -344,29 +305,99 @@ body {
   background: #0f172a;
 }
 
-.overlay-base {
+/* Original satellite image */
+
+.overlay-container .overlay-base {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: fill;
 }
 
-.overlay-mask {
-  display: none;
-}
+/* Transparent PNG containing only red changes */
 
-.overlay-container:has(.overlay-mask)::after {
-  content: "";
+.overlay-container .overlay-mask {
+  display: block;
   position: absolute;
   inset: 0;
-  background: rgba(255, 0, 0, 0.65);
-  -webkit-mask-image: var(--change-mask);
-  mask-image: var(--change-mask);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  background: transparent;
+  opacity: 1;
+  pointer-events: none;
 }
+
+/*
+  Important:
+  No CSS mask-image or ::after red layer.
+
+  BuildingChangeOverlay.jsx generates a PNG
+  with transparent unchanged regions and
+  red predicted building-change regions.
+*/
+
+/* =========================================
+   LAND-COVER STATISTICS TABLE
+========================================= */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 13px 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-table th {
+  background: #eaf2ed;
+  color: #173c2c;
+  font-weight: 700;
+}
+
+.stats-table tbody tr:hover {
+  background: #f8faf9;
+}
+
+/* =========================================
+   LAND-COVER TRANSITIONS
+========================================= */
+
+.transitions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transition-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 9px;
+  background: #f2f7f4;
+  text-align: left;
+}
+
+.transition-item strong {
+  color: #176345;
+  white-space: nowrap;
+}
+
+/* =========================================
+   DOWNLOAD BUTTONS
+========================================= */
+
 .download-actions {
   display: flex;
   justify-content: center;
@@ -388,4 +419,50 @@ body {
 
 .download-button:hover {
   background: #f0fdf4;
+}
+
+/* =========================================
+   MODEL LIMITATIONS / NOTES
+========================================= */
+
+.upload-note {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 700px) {
+  .upload-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 34px;
+  }
+
+  .upload-section {
+    padding: 24px 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .analysis-mode-selector {
+    flex-direction: column;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-button {
+    width: 100%;
+  }
 }
