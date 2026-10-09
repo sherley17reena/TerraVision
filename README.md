@@ -132,6 +132,36 @@ The baseline uses pixel-level RGB features. Its validation sample differs from t
 
 The project excludes raw datasets and trained model checkpoints from Git because of their size. Users must obtain the datasets and model checkpoints separately to reproduce the relevant workflows.
 
+
+## Pretrained Models
+
+TerraVision v1.0.0 provides two pretrained deep-learning models for satellite imagery analysis.
+
+| Model | Checkpoint | Size |
+|---|---|---|
+| Land-Cover U-Net | `unet_experiment.pth` | 119 MB |
+| Temporal U-Net | `temporal_unet_30epochs_best.pth` | 119 MB |
+
+### Download Model Checkpoints
+
+Download both pretrained models from the official release:
+
+[TerraVision v1.0.0 — Model Downloads](https://github.com/sherley17reena/TerraVision/releases/tag/v1.0.0)
+
+Place the downloaded files in:
+
+```text
+TerraVision/
+└── outputs/
+    └── models/
+        ├── unet_experiment.pth
+        └── temporal_unet_30epochs_best.pth
+```
+
+The pretrained models allow users to run satellite imagery analysis without retraining the networks.
+
+The original LoveDA and LEVIR-CD datasets are not required for inference.
+
 ## Installation
 
 ### 1. Clone the repository
