@@ -64,6 +64,10 @@ The project combines semantic segmentation, temporal image analysis, model evalu
 
 ### 1. Land-Cover Segmentation — U-Net
 
+![Land-Cover Segmentation](docs/screenshots/Land_cover_analysis1.png)
+
+![Land-Cover Statistics](docs/screenshots/Land_cover_analysis2.png)
+
 The land-cover model performs semantic segmentation of satellite images into seven categories:
 
 1. Background
@@ -86,6 +90,10 @@ Land-cover change analysis processes the before-and-after images independently a
 | Mean Dice | 47.07% |
 
 ### 2. Building Change Detection — Temporal U-Net
+
+![Building Change Results](docs/screenshots/Building_change_analysis1.png)
+
+![Building Change Mask](docs/screenshots/Building_change_analysis3.png)
 
 The Temporal U-Net processes two satellite images together by combining their RGB channels into a six-channel input.
 
