@@ -93,6 +93,8 @@ Land-cover change analysis processes the before-and-after images independently a
 
 ![Building Change Results](docs/screenshots/Building_change_analysis1.png)
 
+![AI-Detected Building Changes](docs/screenshots/Building_change_analysis2.png)
+
 ![Building Change Mask](docs/screenshots/Building_change_analysis3.png)
 
 The Temporal U-Net processes two satellite images together by combining their RGB channels into a six-channel input.
